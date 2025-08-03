@@ -28,24 +28,20 @@
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-engine</artifactId>
             <version>5.8.2</version>
+            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>com.javarush</groupId>
             <artifactId>desktop-game-engine</artifactId>
             <version>1.0</version>
-            <scope>system</scope>
-            <systemPath>${project.basedir}/lib/desktop-game-engine.jar</systemPath>
         </dependency>
     </dependencies>
 
     <build>
         <resources>
             <resource>
-                <directory>${basedir}/lib/</directory>
-                <includes>
-                    <include>**/*.jar</include>
-                </includes>
-                <targetPath>lib</targetPath>
+                <directory>${project.build.directory}/dependency/</directory>
+                <targetPath>lib/</targetPath>
             </resource>
         </resources>
         <plugins>
@@ -73,17 +69,16 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-dependency-plugin</artifactId>
                 <version>3.8.1</version>
-                <configuration>
-                    <outputDirectory>${project.build.directory}/lib/</outputDirectory>
-                    <includeScope>compile</includeScope>
-                </configuration>
                 <executions>
                     <execution>
-                        <id>copy-dependencies</id>
-                        <phase>package</phase>
+                        <id>copy</id>
+                        <phase>generate-resources</phase>
                         <goals>
                             <goal>copy-dependencies</goal>
                         </goals>
+                        <configuration>
+                            <includeScope>compile</includeScope>
+                        </configuration>
                     </execution>
                 </executions>
             </plugin>
@@ -93,11 +88,16 @@
                 <artifactId>maven-jar-plugin</artifactId>
                 <version>3.4.2</version>
                 <configuration>
-                    <includes>
-                        <include> **/properties/**</include>
-                    </includes>
                     <archive>
-                        <manifestFile>src/META-INF/MANIFEST.MF</manifestFile>
+                        <manifest>
+                            <addClasspath>true</addClasspath>
+                            <classpathPrefix>lib</classpathPrefix>
+                            <mainClass>org.eclipse.jdt.internal.jarinjarloader.JarRsrcLoader</mainClass>
+                        </manifest>
+                        <manifestEntries>
+                            <Rsrc-Main-Class>com.javarush.games.racer.RacerGame</Rsrc-Main-Class>
+                            <Class-Path>./</Class-Path>
+                        </manifestEntries>
                     </archive>
                 </configuration>
             </plugin>
