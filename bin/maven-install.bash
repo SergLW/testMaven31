@@ -1,0 +1,1 @@
+mvn install:install-file -Dfile=C:\Users\cen9i\JRProjects\project-maven-3-1\lib\desktop-game-engine.jar -DgroupId=com.javarush -DartifactId=desktop-game-engine -Dversion=1.0 -Dpackaging=jar
